@@ -15,9 +15,8 @@ public:
             boost::circular_buffer<T>(window_size),
                     mean_(){}
 
-    T mean() {
-        T init_value = static_cast<T>(0);
-        return std::accumulate(begin(), end(), init_value)/ size();
+    T value() {
+        return std::accumulate(begin(), end(), 0)/ size();
     }
     using Buffer::begin;
     using Buffer::end;

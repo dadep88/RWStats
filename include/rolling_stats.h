@@ -16,7 +16,7 @@ class RollingStats : private boost::circular_buffer<T> {
       : boost::circular_buffer<T>(window_size), mean_(0) {}
 
   T mean() { return mean_; }
-  T std() { return mean_; }
+  T std() { return std_; }
   using Buffer::begin;
   using Buffer::capacity;
   using Buffer::empty;

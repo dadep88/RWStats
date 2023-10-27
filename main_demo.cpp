@@ -18,23 +18,17 @@ int main(int argc, char *argv[]) {
   double upper_bound = 0.1;
   std::uniform_real_distribution<double> unif(lower_bound, upper_bound);
   std::default_random_engine re;
-  std::array<double, samples> t;
-  std::array<double, samples> y;
-  for (size_t idx = 0; idx < samples; idx++) {
-    t[idx] = idx / 1000.0;
-    y[idx] = std::sin(t[idx] * M_2_PI * 0.5) +
-             std::cos(t[idx] * M_2_PI * 0.2 + M_PI_4) +
-             std::sin(t[idx] * M_2_PI * 0.03 + M_PI_2);
-  }
-  std::for_each(y.begin(), y.end(),
-                [&unif, &re](double &value) { value += unif(re); });
+  RollingStats<double> rolling_stats(100);
 
   std::ofstream output_file("output.csv");
-
-  for (size_t idx = 0; idx < samples; idx++)
-    output_file << t[idx] << ";" << y[idx] << std::endl;
-
-  // Close the file
+  for (size_t idx = 0; idx < samples; idx++) {
+    double t = idx / 1000.0;
+    double y = std::sin(t * M_2_PI * 0.5) +
+               std::cos(t * M_2_PI * 0.2 + M_PI_4) +
+               std::sin(t * M_2_PI * 0.03 + M_PI_2) + unif(re);
+    rolling_stats.push_back(y);
+    output_file << t << ";" << y << ";" << rolling_stats.mean() << std::endl;
+  }
   output_file.close();
 
   return 0;

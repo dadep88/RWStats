@@ -2,43 +2,35 @@
 #define ROLLING_STATS_LIBRARY_H
 
 #include <boost/circular_buffer.hpp>
-#include<numeric>
-#include<limits>
+#include <limits>
+#include <numeric>
 
+template <typename T>
+class RollingAverage : private boost::circular_buffer<T> {
+  using Buffer = boost::circular_buffer<T>;
+  T value_;
 
-template<typename T>
-class RollingAverage : private boost::circular_buffer<T>{
-    using Buffer = boost::circular_buffer<T>;
-    T mean_;
-public:
-    RollingAverage(size_t window_size) :
-            boost::circular_buffer<T>(window_size),
-                    mean_(){}
+ public:
+  RollingAverage(size_t window_size)
+      : boost::circular_buffer<T>(window_size), value_(0) {}
 
-    T value() {
-        return std::accumulate(begin(), end(), 0)/ size();
-    }
-    using Buffer::begin;
-    using Buffer::end;
-    using Buffer::size;
-    using Buffer::capacity;
-    using Buffer::push_back;
-    using Buffer::pop_front;
+  T value() { return value_; }
+  using Buffer::begin;
+  using Buffer::capacity;
+  using Buffer::empty;
+  using Buffer::end;
+  using Buffer::size;
 
-    void add(T input){
-        if(size() < capacity()){
-            mean_ = (mean_ * size() + input)/ (size() + 1);
-        }
-        else{
-        T data = (*this)[1];
-        mean_ =  ( mean_ * size() - data + input) / size();
-        }
-        push_back();
-    }
+  void push_back(T input) {
+    value_ *= size();
+    value_ += input;
+    if (size() == capacity()) value_ -= (*this)[0];
+    Buffer::push_back(input);
+    value_ /= size();
+  }
 
-    T mean2() const noexcept{
-        return mean_;
-    }
+ private:
+  using Buffer::pop_front;
 };
 
-#endif //ROLLING_STATS_LIBRARY_H
+#endif  // ROLLING_STATS_LIBRARY_H

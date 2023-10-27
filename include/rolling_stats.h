@@ -6,15 +6,17 @@
 #include <numeric>
 
 template <typename T>
-class RollingAverage : private boost::circular_buffer<T> {
+class RollingStats : private boost::circular_buffer<T> {
   using Buffer = boost::circular_buffer<T>;
-  T value_;
+  T mean_;
+  T std_;
 
  public:
-  RollingAverage(size_t window_size)
-      : boost::circular_buffer<T>(window_size), value_(0) {}
+  RollingStats(size_t window_size)
+      : boost::circular_buffer<T>(window_size), mean_(0) {}
 
-  T value() { return value_; }
+  T mean() { return mean_; }
+  T std() { return mean_; }
   using Buffer::begin;
   using Buffer::capacity;
   using Buffer::empty;
@@ -22,11 +24,11 @@ class RollingAverage : private boost::circular_buffer<T> {
   using Buffer::size;
 
   void push_back(T input) {
-    value_ *= size();
-    value_ += input;
-    if (size() == capacity()) value_ -= (*this)[0];
+    mean_ *= size();
+    mean_ += input;
+    if (size() == capacity()) mean_ -= (*this)[0];
     Buffer::push_back(input);
-    value_ /= size();
+    mean_ /= size();
   }
 
  private:

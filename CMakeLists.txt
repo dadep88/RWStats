@@ -4,6 +4,7 @@ project(RollingStats VERSION 1.0)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/lib")
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include(cmake/SourcesAndHeaders.cmake)
 
@@ -27,18 +28,17 @@ add_custom_target(
         clang-format
         COMMAND clang-format
         -style=file
-        -i
+
         ${headers} ${demo_sources} ${test_sources} WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 add_custom_target(
         clang-tidy
-        COMMAND /usr/bin/clang-tidy
+        COMMAND clang-tidy
         ${ALL_SOURCE_FILES}
-        -config=''
-        --
-        -std=c++11
-        ${INCLUDE_DIRECTORIES}
+        -format-style='file'
+        -p cmake-build-release
+        ${headers} ${demo_sources} ${test_sources} WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 

@@ -38,7 +38,7 @@ add_custom_target(
         ${ALL_SOURCE_FILES}
         -format-style='file'
         -p cmake-build-release
-        ${headers} ${demo_sources} ${test_sources} WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        ${headers} WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 

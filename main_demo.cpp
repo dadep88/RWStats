@@ -12,9 +12,7 @@
 static constexpr size_t samples = 1e5;
 
 int main(int argc, char *argv[]) {
-  int count;
-
-  double lower_bound = -0.1;
+    double lower_bound = -0.1;
   double upper_bound = 0.1;
   std::uniform_real_distribution<double> unif1(lower_bound, upper_bound);
   std::uniform_real_distribution<double> unif2(lower_bound * 3,

@@ -22,7 +22,7 @@ class RollingStats : private boost::circular_buffer<T> {
         mean_square0_(0) {}
 
   T mean() { return mean_; }
-  T variance() { return mean_square_ - pow(mean_, 2.0); }
+  T variance() { return mean_square_ - mean_ * mean_; }
   T std_dev() { return sqrt(variance()); }
   using Buffer::begin;
   using Buffer::capacity;
@@ -36,10 +36,11 @@ class RollingStats : private boost::circular_buffer<T> {
     mean_ *= size();
     mean_square_ *= size();
     mean_ += input;
-    mean_square_ += pow(input, 2.0);
+    mean_square_ += input* input;
     if (size() == capacity()) {
-      mean_ -= (*this)[0];
-      mean_square_ -= pow((*this)[0], 2.0);
+        T last_value = (*this)[0];
+      mean_ -= last_value;
+      mean_square_ -= last_value * last_value;
     }
     Buffer::push_back(input);
     mean_ /= size();

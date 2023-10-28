@@ -61,5 +61,5 @@ TEST_P(TestParametricRollingMean, TestMean) {
   }
 }
 
-INSTANTIATE_TEST_CASE_P(BenchmarkTests, TestParametricRollingAverage,
-                        ::testing::Values(1, 10, 100, 1000, 10000));
+INSTANTIATE_TEST_SUITE_P(BenchmarkTests, TestParametricRollingMean,
+                         ::testing::Values(1, 10, 100, 1000, 10000));

@@ -16,7 +16,9 @@ int main(int argc, char *argv[]) {
 
   double lower_bound = -0.1;
   double upper_bound = 0.1;
-  std::uniform_real_distribution<double> unif(lower_bound, upper_bound);
+  std::uniform_real_distribution<double> unif1(lower_bound, upper_bound);
+  std::uniform_real_distribution<double> unif2(lower_bound * 3,
+                                               upper_bound * 3);
   std::default_random_engine re;
   RollingStats<double> rolling_stats(100);
 
@@ -25,9 +27,12 @@ int main(int argc, char *argv[]) {
     double t = idx / 1000.0;
     double y = std::sin(t * M_2_PI * 0.5) +
                std::cos(t * M_2_PI * 0.2 + M_PI_4) +
-               std::sin(t * M_2_PI * 0.03 + M_PI_2) + unif(re);
+               std::sin(t * M_2_PI * 0.03 + M_PI_2) + unif1(re);
+    if (idx > 40000) y += unif2(re);
     rolling_stats.push_back(y);
-    output_file << t << ";" << y << ";" << rolling_stats.mean() << std::endl;
+    auto d = rolling_stats.std_dev();
+    output_file << t << ";" << y << ";" << rolling_stats.mean() << ";"
+                << rolling_stats.std_dev() << std::endl;
   }
   output_file.close();
 

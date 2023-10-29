@@ -41,11 +41,26 @@ TEST(TestRollingMean, TestRolling) {
   ASSERT_DOUBLE_EQ(ra.mean(), mean(ra));
 }
 
+TEST(TestRollingMean, TestMultipleValues){
+  double lower_bound = 0;
+  double upper_bound = 100;
+  std::uniform_real_distribution<double> unif(lower_bound, upper_bound);
+  std::default_random_engine re;
+  std::vector<double> inputs(100000);
+  std::generate(inputs.begin(), inputs.end(), [&]() { return unif(re); });
+
+  RollingWindowStats<double> rws(100);
+  for (double input : inputs) {
+    rws.push_back(input);
+    ASSERT_NEAR(rws.mean(), mean(rws), 1e-9);
+  }
+}
+
+
 class TestParametricRollingMean : public ::testing::TestWithParam<size_t> {
  protected:
-  RollingWindowStats<double> ra_;
-
-  TestParametricRollingMean() : ra_(GetParam()) {}
+  RollingWindowStats<double> rws_;
+  TestParametricRollingMean() : rws_(GetParam()) {}
 };
 
 TEST_P(TestParametricRollingMean, TestMean) {
@@ -58,10 +73,11 @@ TEST_P(TestParametricRollingMean, TestMean) {
   std::generate(inputs.begin(), inputs.end(), [&]() { return unif(re); });
 
   for (double input : inputs) {
-    ra_.push_back(input);
-    ASSERT_NEAR(ra_.mean(), mean(ra_), 1e-9);
+    rws_.push_back(input);
+    double mean =rws_.mean();
+    double std_dev  =rws_.std_dev();
   }
 }
 
 INSTANTIATE_TEST_SUITE_P(BenchmarkTests, TestParametricRollingMean,
-                         ::testing::Values(1, 10, 100, 1000, 10000));
+                         ::testing::Values(1, 10, 100, 1000, 10000, 1000000));

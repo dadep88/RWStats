@@ -28,7 +28,7 @@ add_custom_target(
         clang-format
         COMMAND clang-format
         -style=file
-
+        -i
         ${headers} ${demo_sources} ${test_sources} WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 

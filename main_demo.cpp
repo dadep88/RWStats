@@ -9,16 +9,18 @@
 
 #include "rolling_stats.h"
 
+using namespace  RWStats;
+
 static constexpr size_t samples = 1e5;
 
 int main(int argc, char *argv[]) {
-    double lower_bound = -0.1;
+  double lower_bound = -0.1;
   double upper_bound = 0.1;
   std::uniform_real_distribution<double> unif1(lower_bound, upper_bound);
   std::uniform_real_distribution<double> unif2(lower_bound * 3,
                                                upper_bound * 3);
   std::default_random_engine re;
-  RollingStats<double> rolling_stats(100);
+  RollingWindowStats<double> rolling_stats(100);
 
   std::ofstream output_file("output.csv");
   for (size_t idx = 0; idx < samples; idx++) {

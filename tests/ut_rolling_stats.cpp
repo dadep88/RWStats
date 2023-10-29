@@ -8,6 +8,8 @@
 
 #include "rolling_stats.h"
 
+using namespace RWStats;
+
 template <template <class> class V, class T>
 T mean(const V<T> container) {
   return std::accumulate(container.begin(), container.end(),
@@ -16,20 +18,20 @@ T mean(const V<T> container) {
 }
 
 TEST(TestRollingMean, Test1Value) {
-  auto ra = RollingStats<double>(5);
+  auto ra = RollingWindowStats<double>(5);
   ra.push_back(3.0);
   ASSERT_DOUBLE_EQ(ra.mean(), mean(ra));
 }
 
 TEST(TestRollingMean, Test2Values) {
-  auto ra = RollingStats<double>(5);
+  auto ra = RollingWindowStats<double>(5);
   ra.push_back(3.0);
   ra.push_back(5.0);
   ASSERT_DOUBLE_EQ(ra.mean(), mean(ra));
 }
 
 TEST(TestRollingMean, TestRolling) {
-  auto ra = RollingStats<double>(3);
+  auto ra = RollingWindowStats<double>(3);
   ra.push_back(3.0);
   ra.push_back(5.0);
   ra.push_back(2.0);
@@ -41,7 +43,7 @@ TEST(TestRollingMean, TestRolling) {
 
 class TestParametricRollingMean : public ::testing::TestWithParam<size_t> {
  protected:
-  RollingStats<double> ra_;
+  RollingWindowStats<double> ra_;
 
   TestParametricRollingMean() : ra_(GetParam()) {}
 };

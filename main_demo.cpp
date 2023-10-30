@@ -7,7 +7,7 @@
 #include <fstream>
 #include <random>
 
-#include "rolling_stats.h"
+#include "rw_stats.h"
 
 using namespace  RWStats;
 
@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
   std::uniform_real_distribution<double> unif2(lower_bound * 3,
                                                upper_bound * 3);
   std::default_random_engine re;
-  RollingWindowStats<double> rolling_stats(100);
+  RollingWindowedStats<double> rolling_stats(100);
 
   std::ofstream output_file("output.csv");
   for (size_t idx = 0; idx < samples; idx++) {

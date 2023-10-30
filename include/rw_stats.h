@@ -9,7 +9,7 @@ namespace RWStats {
 /// Capable to compute rolling windowed mean, variance and standard deviation of windowed
 /// data series. \tparam T data type of the data
 template <typename T>
-class RollingWindowStats : private boost::circular_buffer<T> {
+class RollingWindowedStats : private boost::circular_buffer<T> {
   using Buffer = boost::circular_buffer<T>;
   /// Current rolling mean value
   T mean_;
@@ -23,7 +23,7 @@ class RollingWindowStats : private boost::circular_buffer<T> {
  public:
   /// Default ctor
   /// \param window_size Rolling statistics window sizes
-  RollingWindowStats(size_t window_size) noexcept
+  RollingWindowedStats(size_t window_size) noexcept
       : boost::circular_buffer<T>(window_size),
         mean_(0),
         pre_mean_(0),
@@ -66,6 +66,6 @@ class RollingWindowStats : private boost::circular_buffer<T> {
  private:
   using Buffer::pop_front;
 };
-}  // namespace RollingWindowStats
+}  // namespace RollingWindowedStats
 
 #endif  // ROLLING_STATS_LIBRARY_H

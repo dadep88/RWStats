@@ -6,7 +6,7 @@
 
 #include <random>
 
-#include "rolling_stats.h"
+#include "rw_stats.h"
 
 using namespace RWStats;
 
@@ -18,20 +18,20 @@ T mean(const V<T> container) {
 }
 
 TEST(TestRollingMean, Test1Value) {
-  auto ra = RollingWindowStats<double>(5);
+  auto ra = RollingWindowedStats<double>(5);
   ra.push_back(3.0);
   ASSERT_DOUBLE_EQ(ra.mean(), mean(ra));
 }
 
 TEST(TestRollingMean, Test2Values) {
-  auto ra = RollingWindowStats<double>(5);
+  auto ra = RollingWindowedStats<double>(5);
   ra.push_back(3.0);
   ra.push_back(5.0);
   ASSERT_DOUBLE_EQ(ra.mean(), mean(ra));
 }
 
 TEST(TestRollingMean, TestRolling) {
-  auto ra = RollingWindowStats<double>(3);
+  auto ra = RollingWindowedStats<double>(3);
   ra.push_back(3.0);
   ra.push_back(5.0);
   ra.push_back(2.0);
@@ -49,7 +49,7 @@ TEST(TestRollingMean, TestMultipleValues){
   std::vector<double> inputs(100000);
   std::generate(inputs.begin(), inputs.end(), [&]() { return unif(re); });
 
-  RollingWindowStats<double> rws(100);
+  RollingWindowedStats<double> rws(100);
   for (double input : inputs) {
     rws.push_back(input);
     ASSERT_NEAR(rws.mean(), mean(rws), 1e-9);
@@ -59,7 +59,7 @@ TEST(TestRollingMean, TestMultipleValues){
 
 class TestParametricRollingMean : public ::testing::TestWithParam<size_t> {
  protected:
-  RollingWindowStats<double> rws_;
+  RollingWindowedStats<double> rws_;
   TestParametricRollingMean() : rws_(GetParam()) {}
 };
 
